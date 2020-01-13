@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Builder, { Database } from 'react-native-query-builder'
 import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
@@ -33,11 +34,45 @@ export function loadDB() {
     Asset.fromModule(require('./assets/db/db.db')).uri,
     `${FileSystem.documentDirectory}SQLite/db.db`
   ).then(function() {
-    let db = SQLite.openDatabase('db.db');
+    Database.addConnection({
+      type: 'expo',
+      driver: SQLite,
+      name: 'db.db',
+    });
 
-    console.log({db});
-    // register crane here
+    testDatabase();
   })
+}
+
+export function testDatabase() {
+  const DB = new Builder();
+  console.log('init db');
+
+  // const db = SQLite.openDatabase('db.db');
+  //
+  // db.transaction(tx => {
+  //   console.log('hola');
+  //   tx.executeSql(
+  //     'SELECT "Title" from "albums"',
+  //     null,
+  //     (_, res) => {
+  //       console.log(1, {res})
+  //     },
+  //     (_, err) => {
+  //       console.log(2, {err})
+  //     }
+  //   )
+  // });
+
+  DB.table('albums')
+    .select('Title')
+    .get()
+    .then(res => {
+      console.log('response', res)
+    })
+    .catch(err => {
+      console.log('error', err)
+    });
 }
 
 const styles = StyleSheet.create({
