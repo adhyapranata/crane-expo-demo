@@ -56,16 +56,21 @@ export async function loadDB() {
 
 export function testDatabase() {
   // listTables();
-  insertOrIgnore();
+  // insertOrIgnore();
   // insertGetId();
   // get();
   // insert();
+  // update();
+  // updateOrInsert();
   // del();
+  // increment();
+  // decrement();
+  truncate();
 }
 
 export function get() {
   (new Builder())
-    .table('artists')
+    .table('albums')
     .where('ArtistId', '>', 500)
     .get()
     .then(res => {
@@ -164,6 +169,129 @@ export function insertOrIgnore() {
   }).catch((err) => {
     console.log(5, 'err:insertOrIgnore', err);
   });
+}
+
+export function update() {
+  (new Builder())
+    .table('artists')
+    .where('ArtistId', 1)
+    .update({
+      Name: 'Wkwk'
+    }).then(res => {
+      console.log(6, 'res:update', res);
+
+      (new Builder())
+        .table('artists')
+        .where('ArtistId', 1)
+        .get()
+        .then(res => {
+          console.log(6, 'res:get', res)
+        }).catch((err) => {
+        console.log(6, 'err:get', err)
+      });
+    }).catch((err) => {
+      console.log(6, 'err:update', err);
+    });
+}
+
+export function updateOrInsert() {
+  (new Builder())
+    .table('artists')
+    .updateOrInsert(
+      {ArtistId: 506},
+      {Name: 'Polymer'}
+    )
+    .then(res => {
+      console.log(7, 'res:updateOrInsert', res);
+
+      (new Builder())
+        .table('artists')
+        .where('ArtistId', 506)
+        .get()
+        .then(res => {
+          console.log(7, 'res:get', res)
+        }).catch((err) => {
+        console.log(7, 'err:get', err)
+      });
+    }).catch((err) => {
+      console.log(7, 'err:updateOrInsert', err);
+    });
+}
+
+export function increment() {
+  (new Builder())
+    .table('invoices')
+    .where('InvoiceId', 3)
+    .get()
+    .then(res => {
+      console.log(7.1, 'res:get', res);
+
+      (new Builder())
+        .table('invoices')
+        .where('InvoiceId', 3)
+        .increment('Total', 1)
+        .then(res => {
+          console.log(7.2, 'res:increment', res);
+
+          (new Builder())
+            .table('invoices')
+            .where('InvoiceId', 3)
+            .get()
+            .then(res => {
+              console.log(7.3, 'res:get', res)
+            }).catch((err) => {
+              console.log(7.3, 'err:get', err)
+            });
+        }).catch((err) => {
+          console.log(7.2, 'err:increment', err);
+        });
+    }).catch((err) => {
+      console.log(7.1, 'err:get', err)
+    });
+}
+
+export function decrement() {
+  (new Builder())
+    .table('invoices')
+    .where('InvoiceId', 3)
+    .get()
+    .then(res => {
+      console.log(8.1, 'res:get', res);
+
+      (new Builder())
+        .table('invoices')
+        .where('InvoiceId', 3)
+        .decrement('Total', 1)
+        .then(res => {
+          console.log(8.2, 'res:decrement', res);
+
+          (new Builder())
+            .table('invoices')
+            .where('InvoiceId', 3)
+            .get()
+            .then(res => {
+              console.log(8.3, 'res:get', res)
+            }).catch((err) => {
+            console.log(8.3, 'err:get', err)
+          });
+        }).catch((err) => {
+        console.log(8.2, 'err:decrement', err);
+      });
+    }).catch((err) => {
+    console.log(8.1, 'err:get', err)
+  });
+}
+
+export function truncate() {
+  (new Builder())
+    .table('invoices')
+    .truncate()
+    .then(res => {
+      console.log('res:truncate', res)
+    })
+    .catch(err => {
+      console.log('err:truncate', err)
+    })
 }
 
 export function insertGetId() {
