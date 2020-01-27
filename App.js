@@ -65,7 +65,28 @@ export function testDatabase() {
   // del();
   // increment();
   // decrement();
-  truncate();
+  // truncate();
+  // find();
+  // value();
+  pluck();
+}
+
+export function value() {
+  (new Builder())
+    .table('employees')
+    .where('Title', 'Sales Support Agent')
+    .value('FirstName')
+    .then(res => console.log(9, 'res:value', res))
+    .catch(err => console.log(9, 'err:value', err))
+}
+
+export function pluck() {
+  (new Builder())
+    .table('employees')
+    .where('Title', 'Sales Support Agent')
+    .pluck('FirstName', 'LastName')
+    .then(res => console.log(10, 'res:pluck', res))
+    .catch(err => console.log(10, 'err:pluck', err))
 }
 
 export function get() {
