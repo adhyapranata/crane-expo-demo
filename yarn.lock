@@ -1855,6 +1855,12 @@ cosmiconfig@^5.0.5, cosmiconfig@^5.1.0:
     js-yaml "^3.13.1"
     parse-json "^4.0.0"
 
+"crane@git+ssh://git@github.com:adhyapranata/crane.git#0.1.0":
+  version "0.1.0"
+  resolved "git+ssh://git@github.com:adhyapranata/crane.git#227fef2a2025ed18ccc721d9a2ef75b0d79247d9"
+  dependencies:
+    ramda "^0.26.1"
+
 create-react-class@^15.6.2, create-react-class@^15.6.3:
   version "15.6.3"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
@@ -4111,12 +4117,6 @@ react-is@^16.8.1, react-is@^16.8.4:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
   integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
-
-"react-native-query-builder@git+ssh://git@github.com:adhyapranata/react-native-query-builder.git#develop":
-  version "0.1.0"
-  resolved "git+ssh://git@github.com:adhyapranata/react-native-query-builder.git#5d4daef192f967b4aae847292ff25a74726a903b"
-  dependencies:
-    ramda "^0.26.1"
 
 react-native-view-shot@3.0.2:
   version "3.0.2"

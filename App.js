@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Builder, { Database } from 'react-native-query-builder'
+import Builder, { DB } from 'crane';
 import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
@@ -45,7 +45,7 @@ export async function loadDB() {
     console.log(dbFile);
   }
 
-  Database.addConnection({
+  DB.addConnection({
     type: 'expo',
     driver: SQLite,
     name: 'db.db',
@@ -58,7 +58,7 @@ export function testDatabase() {
   // listTables();
   // insertOrIgnore();
   // insertGetId();
-  // get();
+  get();
   // insert();
   // update();
   // updateOrInsert();
@@ -68,11 +68,11 @@ export function testDatabase() {
   // truncate();
   // find();
   // value();
-  pluck();
+  // pluck();
 }
 
 export function value() {
-  (new Builder())
+  Builder()
     .table('employees')
     .where('Title', 'Sales Support Agent')
     .value('FirstName')
@@ -81,7 +81,7 @@ export function value() {
 }
 
 export function pluck() {
-  (new Builder())
+  Builder()
     .table('employees')
     .where('Title', 'Sales Support Agent')
     .pluck('FirstName', 'LastName')
@@ -90,9 +90,9 @@ export function pluck() {
 }
 
 export function get() {
-  (new Builder())
+  Builder()
     .table('albums')
-    .where('ArtistId', '>', 500)
+    .where('ArtistId', '>', 200)
     .get()
     .then(res => {
       console.log('PRE', 'res:get', res)
@@ -103,7 +103,7 @@ export function get() {
 }
 
 export function del() {
-  (new Builder())
+  Builder()
     .table('artists')
     .where('ArtistId', 505)
     .delete()
@@ -116,7 +116,7 @@ export function del() {
 }
 
 export function insert() {
-  (new Builder())
+  Builder()
     .table('artists')
     .insert({
       ArtistId: 500,
@@ -124,7 +124,7 @@ export function insert() {
     }).then(res => {
       console.log(0, 'res:insert', res);
 
-      (new Builder())
+      Builder()
         .table('artists')
         .where('ArtistId', 500)
         .get()
@@ -138,7 +138,7 @@ export function insert() {
     });
 
   // Bulk
-  (new Builder())
+  Builder()
     .table('artists')
     .insert([
       {
@@ -152,7 +152,7 @@ export function insert() {
     ]).then(res => {
       console.log(1, 'res:insertBulk', res);
 
-      (new Builder())
+      Builder()
         .table('artists')
         .where([
           ['ArtistId', '=', 502],
@@ -170,7 +170,7 @@ export function insert() {
 }
 
 export function insertOrIgnore() {
-  (new Builder())
+  Builder()
     .table('artists')
     .insertOrIgnore({
       ArtistId: 505,
@@ -178,7 +178,7 @@ export function insertOrIgnore() {
     }).then(res => {
     console.log(5, 'res:insertOrIgnore', res);
 
-    (new Builder())
+    Builder()
       .table('artists')
       .where('ArtistId', 505)
       .get()
@@ -193,7 +193,7 @@ export function insertOrIgnore() {
 }
 
 export function update() {
-  (new Builder())
+  Builder()
     .table('artists')
     .where('ArtistId', 1)
     .update({
@@ -201,7 +201,7 @@ export function update() {
     }).then(res => {
       console.log(6, 'res:update', res);
 
-      (new Builder())
+      Builder()
         .table('artists')
         .where('ArtistId', 1)
         .get()
@@ -216,7 +216,7 @@ export function update() {
 }
 
 export function updateOrInsert() {
-  (new Builder())
+  Builder()
     .table('artists')
     .updateOrInsert(
       {ArtistId: 506},
@@ -225,7 +225,7 @@ export function updateOrInsert() {
     .then(res => {
       console.log(7, 'res:updateOrInsert', res);
 
-      (new Builder())
+      Builder()
         .table('artists')
         .where('ArtistId', 506)
         .get()
@@ -240,21 +240,21 @@ export function updateOrInsert() {
 }
 
 export function increment() {
-  (new Builder())
+  Builder()
     .table('invoices')
     .where('InvoiceId', 3)
     .get()
     .then(res => {
       console.log(7.1, 'res:get', res);
 
-      (new Builder())
+      Builder()
         .table('invoices')
         .where('InvoiceId', 3)
         .increment('Total', 1)
         .then(res => {
           console.log(7.2, 'res:increment', res);
 
-          (new Builder())
+          Builder()
             .table('invoices')
             .where('InvoiceId', 3)
             .get()
@@ -272,21 +272,21 @@ export function increment() {
 }
 
 export function decrement() {
-  (new Builder())
+  Builder()
     .table('invoices')
     .where('InvoiceId', 3)
     .get()
     .then(res => {
       console.log(8.1, 'res:get', res);
 
-      (new Builder())
+      Builder()
         .table('invoices')
         .where('InvoiceId', 3)
         .decrement('Total', 1)
         .then(res => {
           console.log(8.2, 'res:decrement', res);
 
-          (new Builder())
+          Builder()
             .table('invoices')
             .where('InvoiceId', 3)
             .get()
@@ -304,7 +304,7 @@ export function decrement() {
 }
 
 export function truncate() {
-  (new Builder())
+  Builder()
     .table('invoices')
     .truncate()
     .then(res => {
@@ -316,7 +316,7 @@ export function truncate() {
 }
 
 export function insertGetId() {
-  (new Builder())
+  Builder()
     .table('artists')
     .insertGetId({
       ArtistId: 504,
@@ -324,7 +324,7 @@ export function insertGetId() {
     }).then(res => {
       console.log(4, 'res:insertGetId', res);
 
-      (new Builder())
+      Builder()
         .table('artists')
         .where('ArtistId', 504)
         .get()
@@ -339,7 +339,7 @@ export function insertGetId() {
 }
 
 export function aggregates() {
-  (new Builder())
+  Builder()
     .table('customers')
     .where('PostalCode', "14700")
     .exists()
@@ -350,7 +350,7 @@ export function aggregates() {
       console.log(0, 'error', err)
     });
 
-  (new Builder())
+  Builder()
     .table('customers')
     .where('PostalCode', "14700")
     .doesntExist()
@@ -361,7 +361,7 @@ export function aggregates() {
       console.log(1, 'error', err)
     });
 
-  (new Builder())
+  Builder()
     .table('customers')
     .count()
     .then(res => {
@@ -371,7 +371,7 @@ export function aggregates() {
       console.log(2, 'error', err)
     });
 
-  (new Builder())
+  Builder()
     .table('invoices')
     .max('total')
     .then(res => {
@@ -381,7 +381,7 @@ export function aggregates() {
       console.log(3, 'error', err)
     });
 
-  (new Builder())
+  Builder()
     .table('invoices')
     .min('total')
     .then(res => {
@@ -391,7 +391,7 @@ export function aggregates() {
       console.log(4, 'error', err)
     });
 
-  (new Builder())
+  Builder()
     .table('invoices')
     .avg('total')
     .then(res => {
@@ -401,7 +401,7 @@ export function aggregates() {
       console.log(5, 'error', err)
     });
 
-  (new Builder())
+  Builder()
     .table('invoices')
     .sum('total')
     .then(res => {
@@ -413,10 +413,10 @@ export function aggregates() {
 }
 
 export function union() {
-  const first = (new Builder()).table('customers')
+  const first = Builder().table('customers')
     .whereNull('Company');
 
-  (new Builder()).table('customers')
+  Builder().table('customers')
     .whereNull('State')
     .union(first)
     .get()
