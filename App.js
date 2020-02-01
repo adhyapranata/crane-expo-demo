@@ -8,7 +8,7 @@ import { Asset } from 'expo-asset';
 
 export default function App() {
   useEffect(() => {
-    makeSQLiteDirAsync();
+    testDB();
   }, []);
 
   return (
@@ -18,13 +18,21 @@ export default function App() {
   );
 }
 
-export async function makeSQLiteDirAsync() {
-  const dbTest = SQLite.openDatabase('dummy.db');
+export async function testDB() {
+  await initDB();
+  await queries();
+}
+
+export async function initDB() {
+  await testDriver();
+  await loadDB();
+}
+
+export async function testDriver() {
+  const dummy = SQLite.openDatabase('dummy.db');
 
   try {
-    await dbTest.transaction(tx => tx.executeSql(''));
-
-    loadDB();
+    await dummy.transaction(tx => tx.executeSql(''));
   } catch (e) {
     if (this.state.debugEnabled)
       console.log('error while executing SQL in dummy DB');
@@ -34,31 +42,28 @@ export async function makeSQLiteDirAsync() {
 export async function loadDB() {
   let dbFile = await FileSystem.getInfoAsync(`${FileSystem.documentDirectory}SQLite/db.db`);
 
-  if (!dbFile.exists) {
-    await FileSystem.downloadAsync(
-      Asset.fromModule(require('./assets/db/db.db')).uri,
-      `${FileSystem.documentDirectory}SQLite/db.db`
-    );
-
-    dbFile = await FileSystem.getInfoAsync(`${FileSystem.documentDirectory}SQLite/db.db`);
-
-    console.log(dbFile);
-  }
+  if (!dbFile.exists)
+    makeDir();
 
   DB.addConnection({
     type: 'expo',
     driver: SQLite,
     name: 'db.db',
   });
-
-  testDatabase();
 }
 
-export function testDatabase() {
-  // listTables();
+export async function makeDir() {
+  await FileSystem.downloadAsync(
+    Asset.fromModule(require('./assets/db/db.db')).uri,
+    `${FileSystem.documentDirectory}SQLite/db.db`
+  );
+}
+
+export async function queries() {
+  listTables();
+  // get();
   // insertOrIgnore();
   // insertGetId();
-  get();
   // insert();
   // update();
   // updateOrInsert();
@@ -122,20 +127,20 @@ export function insert() {
       ArtistId: 500,
       Name: 'Euismod Pellentesque'
     }).then(res => {
-      console.log(0, 'res:insert', res);
+    console.log(0, 'res:insert', res);
 
-      Builder()
-        .table('artists')
-        .where('ArtistId', 500)
-        .get()
-        .then(res => {
-          console.log(0, 'res:get', res)
-        }).catch((err) => {
-          console.log(0, 'err:get', err)
-        });
-    }).catch((err) => {
-      console.log(0, 'err:insert', err);
+    Builder()
+      .table('artists')
+      .where('ArtistId', 500)
+      .get()
+      .then(res => {
+        console.log(0, 'res:get', res)
+      }).catch((err) => {
+      console.log(0, 'err:get', err)
     });
+  }).catch((err) => {
+    console.log(0, 'err:insert', err);
+  });
 
   // Bulk
   Builder()
@@ -150,23 +155,23 @@ export function insert() {
         Name: 'Fringilla Tellus'
       },
     ]).then(res => {
-      console.log(1, 'res:insertBulk', res);
+    console.log(1, 'res:insertBulk', res);
 
-      Builder()
-        .table('artists')
-        .where([
-          ['ArtistId', '=', 502],
-          ['ArtistId', '=', 503]
-        ])
-        .get()
-        .then(res => {
-          console.log(1, 'res:get', res)
-        }).catch((err) => {
-          console.log(1, 'err:get', err)
-        });
-    }).catch((err) => {
-      console.log(1, 'err:insertBulk', err);
+    Builder()
+      .table('artists')
+      .where([
+        ['ArtistId', '=', 502],
+        ['ArtistId', '=', 503]
+      ])
+      .get()
+      .then(res => {
+        console.log(1, 'res:get', res)
+      }).catch((err) => {
+      console.log(1, 'err:get', err)
     });
+  }).catch((err) => {
+    console.log(1, 'err:insertBulk', err);
+  });
 }
 
 export function insertOrIgnore() {
@@ -199,20 +204,20 @@ export function update() {
     .update({
       Name: 'Wkwk'
     }).then(res => {
-      console.log(6, 'res:update', res);
+    console.log(6, 'res:update', res);
 
-      Builder()
-        .table('artists')
-        .where('ArtistId', 1)
-        .get()
-        .then(res => {
-          console.log(6, 'res:get', res)
-        }).catch((err) => {
-        console.log(6, 'err:get', err)
-      });
-    }).catch((err) => {
-      console.log(6, 'err:update', err);
+    Builder()
+      .table('artists')
+      .where('ArtistId', 1)
+      .get()
+      .then(res => {
+        console.log(6, 'res:get', res)
+      }).catch((err) => {
+      console.log(6, 'err:get', err)
     });
+  }).catch((err) => {
+    console.log(6, 'err:update', err);
+  });
 }
 
 export function updateOrInsert() {
@@ -235,8 +240,8 @@ export function updateOrInsert() {
         console.log(7, 'err:get', err)
       });
     }).catch((err) => {
-      console.log(7, 'err:updateOrInsert', err);
-    });
+    console.log(7, 'err:updateOrInsert', err);
+  });
 }
 
 export function increment() {
@@ -261,14 +266,14 @@ export function increment() {
             .then(res => {
               console.log(7.3, 'res:get', res)
             }).catch((err) => {
-              console.log(7.3, 'err:get', err)
-            });
+            console.log(7.3, 'err:get', err)
+          });
         }).catch((err) => {
-          console.log(7.2, 'err:increment', err);
-        });
+        console.log(7.2, 'err:increment', err);
+      });
     }).catch((err) => {
-      console.log(7.1, 'err:get', err)
-    });
+    console.log(7.1, 'err:get', err)
+  });
 }
 
 export function decrement() {
@@ -322,20 +327,20 @@ export function insertGetId() {
       ArtistId: 504,
       Name: 'Dapibus Risus'
     }).then(res => {
-      console.log(4, 'res:insertGetId', res);
+    console.log(4, 'res:insertGetId', res);
 
-      Builder()
-        .table('artists')
-        .where('ArtistId', 504)
-        .get()
-        .then(res => {
-          console.log(4, 'res:get', res)
-        }).catch((err) => {
-        console.log(4, 'err:get', err)
-      });
-    }).catch((err) => {
-      console.log(4, 'err:insertGetId', err);
+    Builder()
+      .table('artists')
+      .where('ArtistId', 504)
+      .get()
+      .then(res => {
+        console.log(4, 'res:get', res)
+      }).catch((err) => {
+      console.log(4, 'err:get', err)
     });
+  }).catch((err) => {
+    console.log(4, 'err:insertGetId', err);
+  });
 }
 
 export function aggregates() {
